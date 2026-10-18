@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#111827">
+<title>STUDY STOCK | 공부 기록</title>
+<style>
+:root{--bg:#0b1020;--panel:#131b2e;--panel2:#182239;--line:#2a3650;--text:#edf2ff;--muted:#98a6c4;--blue:#60a5fa;--green:#34d399;--red:#fb7185;--white:#fff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#172544 0,#0b1020 55%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh}
+main{max-width:1100px;margin:auto;padding:24px 16px 48px}.top{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:22px}.brand{font-size:13px;letter-spacing:2px;color:var(--blue);font-weight:800}.top h1{font-size:clamp(25px,4vw,36px);margin:7px 0 4px}.sub{color:var(--muted);font-size:14px}.pill{border:1px solid var(--line);border-radius:999px;padding:8px 12px;color:var(--muted);font-size:12px;white-space:nowrap}
+.grid{display:grid;grid-template-columns:1.05fr 1fr;gap:16px}.panel{background:linear-gradient(150deg,rgba(24,34,57,.96),rgba(17,25,43,.96));border:1px solid var(--line);border-radius:20px;padding:19px;box-shadow:0 12px 30px #0002}.panel h2{font-size:17px;margin:0 0 15px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:flex;flex-direction:column;gap:7px}.field.full{grid-column:1/-1}label{font-size:12px;color:var(--muted)}input,select,button{font:inherit}input,select{width:100%;background:#0e1628;border:1px solid var(--line);border-radius:11px;padding:12px;color:var(--text);outline:none;min-height:44px}input:focus,select:focus{border-color:var(--blue)}button{cursor:pointer;border:0;border-radius:11px;padding:12px 14px;font-weight:750;min-height:44px}.primary{background:var(--blue);color:#071323}.secondary{background:#202d47;color:var(--text);border:1px solid var(--line)}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:13px}.actions button{flex:1}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}.stat{background:#0e1628;border:1px solid var(--line);border-radius:14px;padding:13px}.stat .label{color:var(--muted);font-size:12px}.stat .value{font-size:clamp(20px,3vw,27px);font-weight:800;margin-top:7px;letter-spacing:-.5px}.stat .small{font-size:12px;color:var(--muted);margin-top:5px}
+.up{color:var(--green)!important}.down{color:var(--blue)!important}.flat{color:var(--muted)!important}.chartrow{display:grid;grid-template-columns:minmax(130px, .9fr) 1.1fr;gap:14px;align-items:center}.chartbox{min-width:0;display:flex;justify-content:center;align-items:center}canvas{max-width:100%;height:auto}.legend{display:flex;flex-direction:column;gap:10px;max-height:250px;overflow:auto}.legenditem{display:grid;grid-template-columns:10px 1fr auto;gap:8px;align-items:center;font-size:13px}.dot{width:9px;height:9px;border-radius:3px}.legenditem .name{color:#d9e2f7;overflow-wrap:anywhere}.legenditem .num{color:var(--muted);font-variant-numeric:tabular-nums}
+.periodbar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:13px}.periodbtn{background:#0e1628;color:var(--muted);border:1px solid var(--line);padding:9px 13px;min-height:36px}.periodbtn.active{background:#243958;color:#dbeafe;border-color:#4778b5}
+.records{margin-top:16px}.recordhead{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px}.recordhead h2{margin:0}.tablewrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:440px}th,td{text-align:left;padding:12px 9px;border-bottom:1px solid var(--line);font-size:13px}th{font-size:11px;color:var(--muted);font-weight:650}td:last-child,th:last-child{text-align:right}.del{padding:6px 9px;min-height:30px;background:#2c2030;color:#fda4af;border:1px solid #573040}.empty{padding:24px;text-align:center;color:var(--muted);font-size:13px}.note{font-size:12px;line-height:1.6;color:var(--muted);margin-top:13px}.export{white-space:nowrap}
+@media(max-width:760px){.grid{grid-template-columns:1fr}.top{align-items:flex-start}.pill{display:none}.chartrow{grid-template-columns:minmax(120px,.8fr) 1.2fr}.panel{padding:16px}.stats{gap:7px}.stat{padding:10px}}
+@media(max-width:390px){.formgrid{grid-template-columns:1fr}.field.full{grid-column:auto}.chartrow{grid-template-columns:1fr}.legend{max-height:none}.stats{grid-template-columns:1fr 1fr}.stat:last-child{grid-column:1/-1}}
+</style>
+
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="STUDY STOCK">
+<meta name="description" content="과목별 공부량 기록과 기간별 공부 시간 분석">
+
+</head>
+<body>
+<main>
+  <header class="top">
+    <div><div class="brand">STUDY STOCK / 01</div><h1>공부도 자산처럼 기록하기.</h1><div class="sub">과목별 공부량을 쌓고, 기간별 변화를 확인해 봐.</div></div>
+    <div class="pill">기록은 이 기기의 브라우저에 저장돼요</div>
+  </header>
+  <div class="grid">
+    <section class="panel">
+      <h2>＋ 공부 기록 추가</h2>
+      <form id="studyForm">
+        <div class="formgrid">
+          <div class="field"><label for="date">공부한 날짜</label><input id="date" type="date" required></div>
+          <div class="field"><label for="hours">공부 시간 (시간)</label><input id="hours" type="number" min="0.25" max="24" step="0.25" placeholder="예: 1.5" required></div>
+          <div class="field"><label for="subject">과목</label><select id="subject"><option>국어</option><option>수학</option><option>영어</option><option>물리학</option><option>화학</option><option>생명과학</option><option>지구과학</option><option>한국사</option><option>사회·윤리</option><option>기타</option></select></div>
+          <div class="field" id="customWrap" hidden><label for="customSubject">과목 이름</label><input id="customSubject" maxlength="24" placeholder="직접 입력"></div>
+          <div class="field full"><label for="memo">메모 (선택)</label><input id="memo" maxlength="100" placeholder="예: 미적분 기출 20문제"></div>
+        </div>
+        <div class="actions"><button class="primary" type="submit">기록 저장</button><button class="secondary" type="reset">입력 초기화</button></div>
+      </form>
+      <div class="note">※ 15분 단위로 입력할 수 있어. 같은 날 같은 과목을 여러 번 기록해도 자동으로 합산돼.</div>
+    </section>
+    <section class="panel">
+      <h2>내 공부 대시보드</h2>
+      <div class="periodbar" role="group" aria-label="기간 선택">
+        <button class="periodbtn active" data-period="week" type="button">이번 주</button>
+        <button class="periodbtn" data-period="month" type="button">이번 달</button>
+        <button class="periodbtn" data-period="year" type="button">올해</button>
+        <button class="periodbtn" data-period="all" type="button">전체</button>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="label">선택 기간 공부량</div><div class="value" id="totalHours">0h</div><div class="small" id="periodLabel">이번 주</div></div>
+        <div class="stat"><div class="label">이전 기간 대비</div><div class="value flat" id="changeValue">—</div><div class="small" id="changeLabel">기록이 쌓이면 비교돼</div></div>
+        <div class="stat"><div class="label">공부 기록 일수</div><div class="value" id="daysCount">0일</div><div class="small">선택 기간 기준</div></div>
+      </div>
+      <h2 style="margin-top:8px">과목별 공부 비중</h2>
+      <div class="chartrow">
+        <div class="chartbox"><canvas id="pie" width="260" height="260" aria-label="과목별 공부 시간 파이 차트"></canvas></div>
+        <div class="legend" id="legend"><div class="empty">아직 기록이 없어.<br>첫 공부를 기록해 봐!</div></div>
+      </div>
+      <div class="note" id="comparisonNote">비교 기준: 이번 주와 지난주 공부 시간.</div>
+    </section>
+  </div>
+  <section class="panel records">
+    <div class="recordhead"><h2>공부 기록 내역</h2><button class="secondary export" id="exportBtn" type="button">CSV 내보내기</button></div>
+    <div class="tablewrap"><table><thead><tr><th>날짜</th><th>과목</th><th>공부 시간</th><th>메모</th><th></th></tr></thead><tbody id="recordsBody"></tbody></table></div>
+    <div class="empty" id="recordsEmpty">아직 기록이 없어. 위에서 첫 기록을 추가해 봐.</div>
+    <div class="note">비교 표시: 공부량이 늘면 <span class="up">+ 초록색</span>, 줄면 <span class="down">− 파란색</span>으로 표시해. 데이터는 서버로 전송되지 않고 이 브라우저에 저장돼. 브라우저 데이터 삭제 시 기록도 사라질 수 있으니 CSV 백업을 추천해.</div>
+  </section>
+</main>
+<script>
+(function(){
+ const $=id=>document.getElementById(id);
+ const today=new Date();
+ const localISO=d=>{const x=new Date(d.getTime()-d.getTimezoneOffset()*60000);return x.toISOString().slice(0,10)};
+ $('date').value=localISO(today);
+ let records=[];
+ try{records=JSON.parse(localStorage.getItem('studyStockRecords')||'[]');if(!Array.isArray(records))records=[];}catch(e){records=[]}
+ let period='week';
+ const palette=['#60a5fa','#34d399','#fbbf24','#c084fc','#fb7185','#22d3ee','#f97316','#a3e635','#818cf8','#f472b6','#94a3b8'];
+ const save=()=>{try{localStorage.setItem('studyStockRecords',JSON.stringify(records));}catch(e){alert('저장 공간에 문제가 있어. CSV로 백업해 줘.')}};
+ const hoursFmt=n=>Number(n.toFixed(2)).toLocaleString('ko-KR',{maximumFractionDigits:2})+'h';
+ const dateObj=s=>new Date(s+'T12:00:00');
+ function weekStart(d){const x=new Date(d);x.setHours(12,0,0,0);x.setDate(x.getDate()-((x.getDay()+6)%7));return x}
+ function rangeFor(p, anchor=today){
+   const a=new Date(anchor);a.setHours(12,0,0,0);
+   if(p==='week'){const s=weekStart(a),e=new Date(s);e.setDate(e.getDate()+7);return {start:s,end:e,label:'이번 주'}}
+   if(p==='month'){const s=new Date(a.getFullYear(),a.getMonth(),1,12),e=new Date(a.getFullYear(),a.getMonth()+1,1,12);return {start:s,end:e,label:'이번 달'}}
+   if(p==='year'){const s=new Date(a.getFullYear(),0,1,12),e=new Date(a.getFullYear()+1,0,1,12);return {start:s,end:e,label:'올해'}}
+   return {start:new Date(2000,0,1,12),end:new Date(2100,0,1,12),label:'전체'}
+ }
+ function prevRange(r,p){
+   if(p==='all')return null;
+   const s=new Date(r.start),e=new Date(r.end);
+   if(p==='week'){s.setDate(s.getDate()-7);e.setDate(e.getDate()-7)}
+   if(p==='month'){s.setMonth(s.getMonth()-1);e.setMonth(e.getMonth()-1)}
+   if(p==='year'){s.setFullYear(s.getFullYear()-1);e.setFullYear(e.getFullYear()-1)}
+   return {start:s,end:e,label:p==='week'?'지난주':p==='month'?'지난달':'작년'}
+ }
+ function within(rec,r){const d=dateObj(rec.date);return d>=r.start&&d<r.end}
+ function sum(list){return list.reduce((a,r)=>a+Number(r.hours||0),0)}
+ function drawPie(data){
+   const c=$('pie'),ctx=c.getContext('2d');ctx.clearRect(0,0,c.width,c.height);
+   const entries=Object.entries(data).sort((a,b)=>b[1]-a[1]);const total=entries.reduce((a,x)=>a+x[1],0);
+   if(!total){ctx.beginPath();ctx.arc(130,130,92,0,Math.PI*2);ctx.strokeStyle='#2a3650';ctx.lineWidth=30;ctx.stroke();ctx.fillStyle='#98a6c4';ctx.font='14px sans-serif';ctx.textAlign='center';ctx.fillText('기록 없음',130,135);return}
+   let angle=-Math.PI/2;
+   entries.forEach((item,i)=>{const sweep=item[1]/total*Math.PI*2;ctx.beginPath();ctx.moveTo(130,130);ctx.arc(130,130,105,angle,angle+sweep);ctx.closePath();ctx.fillStyle=palette[i%palette.length];ctx.fill();angle+=sweep});
+   ctx.beginPath();ctx.arc(130,130,63,0,Math.PI*2);ctx.fillStyle='#131b2e';ctx.fill();
+   ctx.fillStyle='#edf2ff';ctx.font='bold 21px sans-serif';ctx.textAlign='center';ctx.fillText(hoursFmt(total),130,127);
+   ctx.fillStyle='#98a6c4';ctx.font='12px sans-serif';ctx.fillText('TOTAL',130,148);
+ }
+ function render(){
+   const range=rangeFor(period);const selected=records.filter(r=>within(r,range));const total=sum(selected);
+   $('totalHours').textContent=hoursFmt(total);$('periodLabel').textContent=range.label;
+   $('daysCount').textContent=new Set(selected.map(r=>r.date)).size+'일';
+   const prev=prevRange(range,period),prevTotal=prev?sum(records.filter(r=>within(r,prev))):null;
+   const cv=$('changeValue'),cl=$('changeLabel');
+   cv.className='value flat';
+   if(prev===null){cv.textContent='—';cl.textContent='기간 비교 없음';}
+   else if(prevTotal===0&&total===0){cv.textContent='0%';cl.textContent=prev.label+'과 동일';}
+   else if(prevTotal===0){cv.textContent='NEW';cv.className='value up';cl.textContent=prev.label+' 기록 없음';}
+   else {const delta=total-prevTotal,pct=delta/prevTotal*100;cv.textContent=(delta>0?'+':delta<0?'−':'')+Math.abs(pct).toFixed(1)+'%';cv.className='value '+(delta>0?'up':delta<0?'down':'flat');cl.textContent=(delta>0?'+':delta<0?'−':'±')+hoursFmt(Math.abs(delta))+' vs '+prev.label;}
+   $('comparisonNote').textContent=period==='all'?'전체 기록은 이전 기간과 비교하지 않아.':`비교 기준: ${range.label} (${localISO(range.start)}부터) ↔ ${prev.label} (${localISO(prev.start)}부터).`;
+   const bySubject={};selected.forEach(r=>bySubject[r.subject]=(bySubject[r.subject]||0)+Number(r.hours));
+   drawPie(bySubject);
+   const legend=$('legend');legend.innerHTML='';
+   const entries=Object.entries(bySubject).sort((a,b)=>b[1]-a[1]);
+   if(!entries.length){legend.innerHTML='<div class="empty">아직 기록이 없어.<br>첫 공부를 기록해 봐!</div>'}
+   entries.forEach(([name,h],i)=>{const el=document.createElement('div');el.className='legenditem';const pct=total?h/total*100:0;el.innerHTML=`<span class="dot" style="background:${palette[i%palette.length]}"></span><span class="name"></span><span class="num"></span>`;el.querySelector('.name').textContent=name;el.querySelector('.num').textContent=hoursFmt(h)+' · '+pct.toFixed(1)+'%';legend.appendChild(el)});
+   const body=$('recordsBody');body.innerHTML='';
+   const sorted=[...records].sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id);
+   $('recordsEmpty').style.display=sorted.length?'none':'block';
+   sorted.forEach(r=>{const tr=document.createElement('tr');tr.innerHTML='<td></td><td></td><td></td><td></td><td><button class="del" type="button">삭제</button></td>';const cells=tr.querySelectorAll('td');cells[0].textContent=r.date;cells[1].textContent=r.subject;cells[2].textContent=hoursFmt(Number(r.hours));cells[3].textContent=r.memo||'—';tr.querySelector('button').addEventListener('click',()=>{if(confirm(`${r.date} ${r.subject} 기록을 삭제할까?`)){records=records.filter(x=>x.id!==r.id);save();render()}});body.appendChild(tr)});
+ }
+ $('subject').addEventListener('change',()=>{$('customWrap').hidden=$('subject').value!=='기타';if($('subject').value==='기타')$('customSubject').focus()});
+ $('studyForm').addEventListener('submit',e=>{e.preventDefault();const date=$('date').value;const hours=Number($('hours').value);let subject=$('subject').value;if(subject==='기타')subject=$('customSubject').value.trim();if(!date||!subject||!Number.isFinite(hours)||hours<=0||hours>24){alert('날짜, 과목, 공부 시간을 올바르게 입력해 줘.');return}records.push({id:Date.now()+Math.floor(Math.random()*1000),date,subject,hours,memo:$('memo').value.trim()});save();$('hours').value='';$('memo').value='';render()});
+ $('studyForm').addEventListener('reset',()=>setTimeout(()=>{$('customWrap').hidden=true},0));
+ document.querySelectorAll('[data-period]').forEach(b=>b.addEventListener('click',()=>{period=b.dataset.period;document.querySelectorAll('[data-period]').forEach(x=>x.classList.toggle('active',x===b));render()}));
+ $('exportBtn').addEventListener('click',()=>{if(!records.length){alert('내보낼 기록이 아직 없어.');return}const esc=v=>'"'+String(v??'').replace(/"/g,'""')+'"';const csv='\uFEFF'+[['날짜','과목','공부시간(시간)','메모'],...records.sort((a,b)=>a.date.localeCompare(b.date)).map(r=>[r.date,r.subject,r.hours,r.memo])].map(row=>row.map(esc).join(',')).join('\r\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='study-stock-records.csv';a.click();URL.revokeObjectURL(url)});
+ render();
+})();
+</script>
+
+<script>
+if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js").catch(err => {
+      console.warn("오프라인 기능 등록 실패:", err);
+    });
+  });
+}
+</script>
+
+</body>
+</html>
